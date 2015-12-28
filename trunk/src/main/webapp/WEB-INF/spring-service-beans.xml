@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="exceptionHandler" class="by.bsu.factorial.service.handlers.ExceptionHandler">
+        <property name="tryHandler" ref="cacheHandler" />
+    </bean>
+
+    <bean id="cacheHandler" class="by.bsu.factorial.service.handlers.CacheHandler">
+        <property name="nextHandler" ref="processHandler"/>
+    </bean>
+    <bean id="processHandler" class="by.bsu.factorial.service.handlers.GroupHandler">
+        <property name="handlers">
+            <list>
+                <ref bean="securityHandler" />
+                <ref bean="validateHandler" />
+                <ref bean="calculateHandler" />
+            </list>
+        </property>
+    </bean>
+    <bean id="validateHandler" class="by.bsu.factorial.service.handlers.ValidateHandler"/>
+    <bean id="securityHandler" class="by.bsu.factorial.service.handlers.SecurityHandler">
+        <property name="availableIps">
+            <set>
+                <value>127.0.0.1</value>
+            </set>
+        </property>
+    </bean>
+    <bean id="calculateHandler" class="by.bsu.factorial.service.handlers.CalculateHandler"/>
+
+</beans>
